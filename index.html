@@ -1,0 +1,2395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenHeart — Golf. Give. Win.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── TOKENS ──────────────────────────────── */
+  :root {
+    --navy:   #0A0F1E;
+    --navy2:  #111827;
+    --teal:   #00D4AA;
+    --teal2:  #00B891;
+    --gold:   #F5B842;
+    --cream:  #F0EDE8;
+    --slate:  #8892A4;
+    --glass:  rgba(255,255,255,0.05);
+    --glass2: rgba(255,255,255,0.09);
+    --border: rgba(255,255,255,0.08);
+    --red:    #FF5A5A;
+    --green:  #00D4AA;
+    --mono:   'JetBrains Mono', monospace;
+    --serif:  'Playfair Display', serif;
+    --sans:   'Inter', sans-serif;
+  }
+
+  /* ── RESET ──────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--navy);
+    color: var(--cream);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+  button { cursor: pointer; font-family: var(--sans); border: none; outline: none; }
+  input, select, textarea { font-family: var(--sans); }
+  a { text-decoration: none; color: inherit; }
+
+  /* ── UTILS ──────────────────────────────── */
+  .hidden { display: none !important; }
+  .teal { color: var(--teal); }
+  .gold { color: var(--gold); }
+  .slate { color: var(--slate); }
+  .mono { font-family: var(--mono); }
+  .center { text-align: center; }
+  .flex { display: flex; }
+  .gap-1 { gap: 0.5rem; }
+  .gap-2 { gap: 1rem; }
+  .gap-3 { gap: 1.5rem; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .wrap { flex-wrap: wrap; }
+  .col { flex-direction: column; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
+  .mt-1 { margin-top: 0.5rem; }
+  .mt-2 { margin-top: 1rem; }
+  .mt-3 { margin-top: 1.5rem; }
+  .mt-4 { margin-top: 2rem; }
+  .mb-1 { margin-bottom: 0.5rem; }
+  .mb-2 { margin-bottom: 1rem; }
+  .mb-3 { margin-bottom: 1.5rem; }
+  .w-full { width: 100%; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.72rem;
+    font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .badge-teal { background: rgba(0,212,170,0.15); color: var(--teal); }
+  .badge-gold { background: rgba(245,184,66,0.15); color: var(--gold); }
+  .badge-red  { background: rgba(255,90,90,0.15);  color: var(--red); }
+  .badge-slate{ background: rgba(136,146,164,0.15);color: var(--slate); }
+
+  /* ── SCROLLBAR ──────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--navy2); }
+  ::-webkit-scrollbar-thumb { background: #2a3352; border-radius: 3px; }
+
+  /* ── CARD ───────────────────────────────── */
+  .card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    backdrop-filter: blur(12px);
+  }
+  .card-sm { padding: 1rem; border-radius: 12px; }
+  .card-title {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--slate); margin-bottom: 0.75rem;
+  }
+
+  /* ── BUTTONS ────────────────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+    transition: all 0.2s ease; white-space: nowrap;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--teal), var(--teal2));
+    color: var(--navy); box-shadow: 0 4px 20px rgba(0,212,170,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,170,0.45); }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), #E8A020);
+    color: var(--navy); box-shadow: 0 4px 20px rgba(245,184,66,0.3);
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,184,66,0.45); }
+  .btn-outline {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--cream); 
+  }
+  .btn-outline:hover { background: var(--glass2); border-color: rgba(255,255,255,0.2); }
+  .btn-ghost { background: transparent; color: var(--slate); padding: 0.5rem 0.75rem; }
+  .btn-ghost:hover { color: var(--cream); }
+  .btn-danger { background: rgba(255,90,90,0.15); color: var(--red); border: 1px solid rgba(255,90,90,0.3); }
+  .btn-danger:hover { background: rgba(255,90,90,0.25); }
+  .btn-sm { padding: 0.45rem 0.9rem; font-size: 0.8rem; border-radius: 8px; }
+  .btn-lg { padding: 1rem 2.5rem; font-size: 1rem; border-radius: 12px; }
+
+  /* ── FORM ELEMENTS ──────────────────────── */
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label {
+    display: block; font-size: 0.8rem; font-weight: 500; color: var(--slate);
+    margin-bottom: 0.4rem; letter-spacing: 0.03em;
+  }
+  .form-input {
+    width: 100%; padding: 0.75rem 1rem; border-radius: 10px;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    color: var(--cream); font-size: 0.9rem; transition: border-color 0.2s;
+  }
+  .form-input:focus { outline: none; border-color: var(--teal); background: rgba(0,212,170,0.05); }
+  .form-input::placeholder { color: var(--slate); }
+  .form-input.error { border-color: var(--red); }
+  .form-error { font-size: 0.78rem; color: var(--red); margin-top: 0.35rem; }
+  .form-hint  { font-size: 0.78rem; color: var(--slate); margin-top: 0.35rem; }
+  select.form-input option { background: var(--navy2); color: var(--cream); }
+
+  /* ── NAVBAR ─────────────────────────────── */
+  #navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem;
+    background: rgba(10,15,30,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .nav-logo {
+    font-family: var(--serif); font-size: 1.4rem; font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--teal); }
+  .nav-links { display: flex; align-items: center; gap: 2rem; }
+  .nav-links a {
+    font-size: 0.88rem; font-weight: 500; color: var(--slate);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cream); }
+  .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+  /* ── PAGES ──────────────────────────────── */
+  .page { display: none; min-height: 100vh; padding-top: 72px; }
+  .page.active { display: block; }
+
+  /* ── HERO ───────────────────────────────── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,170,0.12) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(245,184,66,0.08) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 780px; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.4rem 1rem; border-radius: 999px;
+    background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.25);
+    font-size: 0.78rem; font-weight: 600; color: var(--teal); letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 2rem;
+  }
+  .hero-eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal); animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+  .hero-h1 {
+    font-family: var(--serif); font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 900; line-height: 1.05; letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+  .hero-h1 em { font-style: italic; color: var(--teal); }
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.2rem); color: var(--slate);
+    max-width: 540px; margin: 0 auto 2.5rem; line-height: 1.7;
+  }
+  .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* Charity counter */
+  .charity-counter {
+    margin-top: 4rem;
+    display: inline-flex; flex-direction: column; align-items: center;
+    padding: 1.5rem 3rem; border-radius: 20px;
+    background: var(--glass); border: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+  }
+  .counter-label {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--slate); margin-bottom: 0.5rem;
+  }
+  .counter-value {
+    font-family: var(--serif); font-size: 3.5rem; font-weight: 900;
+    color: var(--teal); letter-spacing: -0.04em; line-height: 1;
+  }
+  .counter-sub { font-size: 0.8rem; color: var(--slate); margin-top: 0.25rem; }
+
+  /* ── HOW IT WORKS ──────────────────────── */
+  .section {
+    padding: 6rem 2rem;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .section-tag {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900; line-height: 1.1; letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .section-sub { color: var(--slate); font-size: 1rem; max-width: 500px; line-height: 1.7; }
+
+  .step-card {
+    background: var(--glass); border: 1px solid var(--border); border-radius: 20px;
+    padding: 2rem; position: relative; overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .step-card:hover { transform: translateY(-4px); border-color: rgba(0,212,170,0.3); }
+  .step-num {
+    font-family: var(--serif); font-size: 5rem; font-weight: 900;
+    color: rgba(255,255,255,0.04); line-height: 1;
+    position: absolute; top: 1rem; right: 1.5rem;
+  }
+  .step-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: rgba(0,212,170,0.12); display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 1.25rem;
+  }
+  .step-h { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .step-p { font-size: 0.88rem; color: var(--slate); line-height: 1.65; }
+
+  /* ── PRIZE POOL ─────────────────────────── */
+  .prize-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,212,170,0.04) 50%, transparent 100%);
+  }
+  .prize-section .inner { max-width: 1100px; margin: 0 auto; }
+  .prize-tier {
+    display: flex; align-items: center; padding: 1.5rem;
+    background: var(--glass); border: 1px solid var(--border); border-radius: 16px;
+    gap: 1.5rem; transition: all 0.3s;
+  }
+  .prize-tier:hover { border-color: rgba(245,184,66,0.3); }
+  .tier-badge {
+    width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .tier-1 { background: linear-gradient(135deg, rgba(245,184,66,0.25), rgba(245,184,66,0.1)); color: var(--gold); border: 1px solid rgba(245,184,66,0.3); }
+  .tier-2 { background: rgba(255,255,255,0.06); color: var(--cream); border: 1px solid var(--border); }
+  .tier-3 { background: rgba(136,146,164,0.1); color: var(--slate); border: 1px solid rgba(136,146,164,0.2); }
+  .tier-dots { font-size: 1.1rem; margin-bottom: 2px; }
+  .tier-name { font-weight: 700; font-size: 0.95rem; }
+  .tier-desc { font-size: 0.82rem; color: var(--slate); }
+  .tier-pct {
+    margin-left: auto;
+    font-family: var(--serif); font-size: 2rem; font-weight: 900;
+  }
+
+  /* ── CHARITIES ──────────────────────────── */
+  .charity-card {
+    background: var(--glass); border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; transition: all 0.3s; cursor: pointer;
+  }
+  .charity-card:hover { transform: translateY(-4px); border-color: rgba(0,212,170,0.3); }
+  .charity-img {
+    height: 140px; background: linear-gradient(135deg, #1a2744, #0d1f3c);
+    display: flex; align-items: center; justify-content: center; font-size: 3rem;
+  }
+  .charity-body { padding: 1.25rem; }
+  .charity-name { font-weight: 700; margin-bottom: 0.25rem; }
+  .charity-desc { font-size: 0.82rem; color: var(--slate); line-height: 1.55; }
+  .charity-raised {
+    margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);
+    font-size: 0.78rem; color: var(--teal); font-weight: 600;
+    display: flex; align-items: center; gap: 0.35rem;
+  }
+
+  /* ── MODALS ─────────────────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  .modal {
+    background: #111827; border: 1px solid var(--border); border-radius: 20px;
+    padding: 2rem; width: 100%; max-width: 480px; position: relative;
+    animation: slideUp 0.3s ease;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal-wide { max-width: 700px; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: var(--glass); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--slate); padding: 0.35rem 0.55rem; font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { color: var(--cream); background: var(--glass2); }
+  .modal-title {
+    font-family: var(--serif); font-size: 1.6rem; font-weight: 900;
+    margin-bottom: 0.4rem;
+  }
+  .modal-sub { font-size: 0.88rem; color: var(--slate); margin-bottom: 1.75rem; }
+
+  /* ── TABS ───────────────────────────────── */
+  .tabs {
+    display: flex; border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem; gap: 0;
+  }
+  .tab-btn {
+    padding: 0.7rem 1.25rem; font-size: 0.85rem; font-weight: 500;
+    color: var(--slate); background: transparent; border: none;
+    border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+  .tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
+  .tab-btn:hover:not(.active) { color: var(--cream); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── DASHBOARD ──────────────────────────── */
+  #page-dashboard { padding-top: 72px; }
+  .dash-header {
+    padding: 2.5rem 2rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(0,212,170,0.04) 0%, transparent 100%);
+  }
+  .dash-header .inner { max-width: 1200px; margin: 0 auto; }
+  .dash-greeting { color: var(--slate); font-size: 0.9rem; margin-bottom: 0.25rem; }
+  .dash-name { font-family: var(--serif); font-size: 1.8rem; font-weight: 900; }
+  .dash-body { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+  .dash-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: var(--glass); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; }
+  .stat-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); margin-bottom: 0.5rem; }
+  .stat-value { font-family: var(--serif); font-size: 2rem; font-weight: 900; line-height: 1; }
+  .stat-sub { font-size: 0.78rem; color: var(--slate); margin-top: 0.25rem; }
+  .dash-two { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; }
+
+  /* Score entry */
+  .score-list { display: flex; flex-direction: column; gap: 0.65rem; }
+  .score-item {
+    display: flex; align-items: center; gap: 1rem;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.75rem 1rem;
+  }
+  .score-rank {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; background: rgba(0,212,170,0.1); color: var(--teal);
+  }
+  .score-date { font-size: 0.8rem; color: var(--slate); flex: 1; }
+  .score-pts { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; color: var(--cream); }
+  .score-actions { display: flex; gap: 0.35rem; }
+  .icon-btn {
+    width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--border);
+    background: transparent; color: var(--slate); display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
+  }
+  .icon-btn:hover { color: var(--cream); border-color: rgba(255,255,255,0.2); background: var(--glass); }
+  .icon-btn.danger:hover { color: var(--red); border-color: rgba(255,90,90,0.3); }
+  .empty-state {
+    text-align: center; padding: 3rem 1.5rem; color: var(--slate);
+  }
+  .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+  .empty-state p { font-size: 0.88rem; }
+
+  /* ── DRAW DISPLAY ───────────────────────── */
+  .draw-numbers { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .draw-ball {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-weight: 700; font-size: 1rem;
+    border: 2px solid var(--border); background: var(--glass);
+    transition: all 0.3s;
+  }
+  .draw-ball.match { background: rgba(0,212,170,0.2); border-color: var(--teal); color: var(--teal); }
+  .draw-ball.jackpot { background: rgba(245,184,66,0.2); border-color: var(--gold); color: var(--gold); }
+
+  /* ── ADMIN ──────────────────────────────── */
+  #page-admin { padding-top: 72px; }
+  .admin-layout { display: flex; min-height: calc(100vh - 72px); }
+  .admin-sidebar {
+    width: 240px; flex-shrink: 0;
+    background: rgba(255,255,255,0.02); border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+  }
+  .admin-sidebar-title {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--slate); padding: 0 0.5rem; margin-bottom: 0.75rem; margin-top: 1.25rem;
+  }
+  .admin-sidebar-title:first-child { margin-top: 0; }
+  .admin-nav-btn {
+    display: flex; align-items: center; gap: 0.65rem;
+    width: 100%; padding: 0.65rem 0.75rem; border-radius: 10px;
+    background: transparent; color: var(--slate); font-size: 0.86rem; font-weight: 500;
+    border: none; cursor: pointer; transition: all 0.2s; text-align: left; margin-bottom: 2px;
+  }
+  .admin-nav-btn:hover { background: var(--glass); color: var(--cream); }
+  .admin-nav-btn.active { background: rgba(0,212,170,0.12); color: var(--teal); }
+  .admin-main { flex: 1; padding: 2rem; overflow-y: auto; }
+  .admin-section { display: none; }
+  .admin-section.active { display: block; }
+  .admin-header { margin-bottom: 1.75rem; }
+  .admin-title { font-family: var(--serif); font-size: 1.6rem; font-weight: 900; }
+  .admin-sub { font-size: 0.88rem; color: var(--slate); margin-top: 0.25rem; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th {
+    text-align: left; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--slate); padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 0.85rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .user-avatar {
+    width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; background: rgba(0,212,170,0.15); color: var(--teal);
+  }
+
+  /* ── PRIZE POOL BAR ─────────────────────── */
+  .pool-bar-wrap { margin: 1rem 0; }
+  .pool-bar-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--slate); margin-bottom: 0.4rem; }
+  .pool-bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .pool-bar-fill { height: 100%; border-radius: 999px; transition: width 1s ease; }
+
+  /* ── NOTIFICATION TOAST ─────────────────── */
+  #toast-container {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+    display: flex; flex-direction: column; gap: 0.75rem;
+  }
+  .toast {
+    padding: 0.9rem 1.25rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500;
+    display: flex; align-items: center; gap: 0.65rem; min-width: 260px;
+    animation: slideIn 0.3s ease; border: 1px solid;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .toast-success { background: rgba(0,212,170,0.15); border-color: rgba(0,212,170,0.3); color: var(--teal); }
+  .toast-error   { background: rgba(255,90,90,0.15);  border-color: rgba(255,90,90,0.3);  color: var(--red); }
+  .toast-info    { background: rgba(245,184,66,0.15); border-color: rgba(245,184,66,0.3); color: var(--gold); }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── RESPONSIVE ─────────────────────────── */
+  @media (max-width: 900px) {
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    .dash-grid { grid-template-columns: 1fr 1fr; }
+    .dash-two { grid-template-columns: 1fr; }
+    .admin-layout { flex-direction: column; }
+    .admin-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 1rem; }
+    .admin-sidebar-title { display: none; }
+    .admin-nav-btn { display: inline-flex; width: auto; }
+    .admin-sidebar { display: flex; overflow-x: auto; gap: 0.5rem; }
+  }
+  @media (max-width: 640px) {
+    #navbar { padding: 1rem; }
+    .nav-links { display: none; }
+    .grid-2, .grid-3, .grid-4, .dash-grid { grid-template-columns: 1fr; }
+    .hero-cta { flex-direction: column; align-items: center; }
+    .modal { padding: 1.5rem; }
+    .dash-body { padding: 1rem; }
+    .admin-main { padding: 1rem; }
+  }
+
+  /* Plan card */
+  .plan-card {
+    background: var(--glass); border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.75rem; cursor: pointer; transition: all 0.25s; position: relative;
+  }
+  .plan-card:hover, .plan-card.selected {
+    border-color: var(--teal); background: rgba(0,212,170,0.06);
+    transform: translateY(-2px);
+  }
+  .plan-card.selected::after {
+    content: '✓'; position: absolute; top: 1rem; right: 1rem;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--teal); color: var(--navy); font-size: 0.75rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .plan-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
+  .plan-price { font-family: var(--serif); font-size: 2.2rem; font-weight: 900; line-height: 1; }
+  .plan-period { font-size: 0.78rem; color: var(--slate); }
+  .plan-features { margin-top: 1rem; font-size: 0.83rem; color: var(--slate); line-height: 1.8; }
+
+  /* divider */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  /* Progress steps */
+  .progress-steps {
+    display: flex; gap: 0; margin-bottom: 2rem;
+    background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.25rem;
+  }
+  .progress-step {
+    flex: 1; text-align: center; padding: 0.6rem 0.5rem; border-radius: 10px;
+    font-size: 0.78rem; font-weight: 600; color: var(--slate); transition: all 0.25s;
+  }
+  .progress-step.active { background: var(--teal); color: var(--navy); }
+  .progress-step.done { color: var(--teal); }
+
+  /* Charity select in signup */
+  .charity-option {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 10px;
+    cursor: pointer; transition: all 0.2s; margin-bottom: 0.5rem;
+    background: rgba(255,255,255,0.03);
+  }
+  .charity-option:hover { border-color: var(--teal); }
+  .charity-option.selected { border-color: var(--teal); background: rgba(0,212,170,0.06); }
+  .charity-option-icon { font-size: 1.5rem; }
+  .charity-option-name { font-weight: 600; font-size: 0.9rem; }
+  .charity-option-desc { font-size: 0.78rem; color: var(--slate); }
+
+  /* Range input */
+  .range-wrap { padding: 0.5rem 0; }
+  input[type=range] {
+    width: 100%; appearance: none; background: rgba(255,255,255,0.1);
+    border-radius: 999px; height: 6px; outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--teal); cursor: pointer; box-shadow: 0 0 0 4px rgba(0,212,170,0.2);
+  }
+  .range-val { font-family: var(--mono); color: var(--teal); font-weight: 700; font-size: 1.1rem; margin-top: 0.5rem; }
+
+  /* Winnings */
+  .win-card {
+    background: linear-gradient(135deg, rgba(245,184,66,0.08), rgba(245,184,66,0.03));
+    border: 1px solid rgba(245,184,66,0.2); border-radius: 14px; padding: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .win-amount { font-family: var(--serif); font-size: 1.6rem; font-weight: 900; color: var(--gold); }
+  .win-draw { font-size: 0.8rem; color: var(--slate); }
+  .win-tier { font-size: 0.78rem; font-weight: 600; }
+
+  /* Charity contribution slider in dashboard */
+  .charity-dash {
+    display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+  }
+  .charity-logo-big { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+  /* ── LANDING SECTIONS ───────────────────── */
+  .land-charity {
+    padding: 6rem 2rem;
+    background: linear-gradient(135deg, rgba(0,212,170,0.04) 0%, transparent 60%);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .land-charity .inner { max-width: 1100px; margin: 0 auto; }
+  .cta-section {
+    padding: 8rem 2rem; text-align: center;
+    background: radial-gradient(ellipse at center, rgba(0,212,170,0.1) 0%, transparent 70%);
+  }
+  .footer {
+    padding: 2rem; text-align: center; border-top: 1px solid var(--border);
+    font-size: 0.82rem; color: var(--slate);
+  }
+  .footer a { color: var(--teal); }
+
+  /* ── DRAW SPINNER ANIMATION ─────────────── */
+  .spinner-ring {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 3px solid var(--border); border-top-color: var(--teal);
+    animation: spin 0.7s linear infinite; display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Verification upload */
+  .upload-zone {
+    border: 2px dashed var(--border); border-radius: 12px;
+    padding: 2.5rem; text-align: center; cursor: pointer; transition: all 0.2s;
+    color: var(--slate); font-size: 0.88rem;
+  }
+  .upload-zone:hover { border-color: var(--teal); color: var(--cream); background: rgba(0,212,170,0.03); }
+  .upload-zone input { display: none; }
+  .upload-icon { font-size: 2.5rem; margin-bottom: 0.75rem; opacity: 0.5; }
+
+  /* ── CONFIRMATION PAGE ──────────────────── */
+  .confirm-icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: rgba(0,212,170,0.15); border: 2px solid var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; margin: 0 auto 1.5rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-logo" onclick="showPage('home')" style="cursor:pointer">
+    Green<span>Heart</span>
+  </div>
+  <div class="nav-links">
+    <a href="#" onclick="showPage('home')">Home</a>
+    <a href="#" onclick="scrollToSection('how-it-works')">How it Works</a>
+    <a href="#" onclick="scrollToSection('charities')">Charities</a>
+    <a href="#" onclick="scrollToSection('prizes')">Prizes</a>
+  </div>
+  <div class="nav-actions" id="nav-actions">
+    <button class="btn btn-outline btn-sm" onclick="openModal('modal-login')">Sign In</button>
+    <button class="btn btn-primary btn-sm" onclick="openModal('modal-signup')">Join Now</button>
+  </div>
+</nav>
+
+<!-- ══ TOAST CONTAINER ══════════════════════════ -->
+<div id="toast-container"></div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE: HOME
+════════════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        Live — Draw closes in <span id="hero-countdown">14 days</span>
+      </div>
+      <h1 class="hero-h1">
+        Play Golf.<br>
+        <em>Change Lives.</em><br>
+        Win Big.
+      </h1>
+      <p class="hero-sub">
+        Enter your Stableford scores each month. We power the draw.
+        You pick the charity. Everyone wins something.
+      </p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-lg" onclick="openModal('modal-signup')">
+          Start Your Journey — £9.99/mo
+        </button>
+        <button class="btn btn-outline btn-lg" onclick="scrollToSection('how-it-works')">
+          See How It Works
+        </button>
+      </div>
+
+      <div class="charity-counter">
+        <div class="counter-label">Donated to charity this month</div>
+        <div class="counter-value" id="charity-total">£0</div>
+        <div class="counter-sub">across <span id="charity-subs">0</span> active subscribers</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section" id="how-it-works">
+    <div class="section-tag">Simple by design</div>
+    <h2 class="section-title">Three things.<br>One platform.</h2>
+    <p class="section-sub">No handicap index required. Just your last five scores and a desire to do good.</p>
+
+    <div class="grid-3 mt-4">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-icon">⛳</div>
+        <div class="step-h">Enter Your Scores</div>
+        <p class="step-p">Log your last 5 Stableford scores after every round. One entry per date, automatically sorted newest-first.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-icon">🎯</div>
+        <div class="step-h">Power the Draw</div>
+        <p class="step-p">Your scores become your draw entries. Match 3, 4, or all 5 numbers each month to win your tier of the prize pool.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-icon">💚</div>
+        <div class="step-h">Fund What Matters</div>
+        <p class="step-p">At least 10% of your subscription goes directly to the charity you choose. Increase it any time you like.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prize Pool -->
+  <section class="prize-section" id="prizes">
+    <div class="inner">
+      <div class="flex items-center justify-between wrap gap-2 mb-3">
+        <div>
+          <div class="section-tag">Monthly draw</div>
+          <h2 class="section-title" style="font-size:2rem">Prize pool breakdown</h2>
+        </div>
+        <div class="card card-sm" style="min-width:180px">
+          <div class="card-title">This month's pool</div>
+          <div style="font-family:var(--serif);font-size:2rem;font-weight:900;color:var(--gold)" id="total-pool">£0</div>
+          <div style="font-size:0.78rem;color:var(--slate)" id="pool-subs">0 subscribers</div>
+        </div>
+      </div>
+
+      <div class="flex col gap-3 mt-3">
+        <div class="prize-tier">
+          <div class="tier-badge tier-1">
+            <div class="tier-dots">●●●●●</div>
+            <div>5-Match</div>
+          </div>
+          <div>
+            <div class="tier-name">Jackpot 🏆</div>
+            <div class="tier-desc">Match all 5 numbers — rolls over if unclaimed</div>
+            <div class="pool-bar-wrap">
+              <div class="pool-bar"><div class="pool-bar-fill" style="width:40%;background:linear-gradient(90deg,var(--gold),#E8A020)"></div></div>
+            </div>
+          </div>
+          <div class="tier-pct gold">40%</div>
+        </div>
+        <div class="prize-tier">
+          <div class="tier-badge tier-2">
+            <div class="tier-dots">●●●●</div>
+            <div>4-Match</div>
+          </div>
+          <div style="flex:1">
+            <div class="tier-name">Silver 🥈</div>
+            <div class="tier-desc">Match any 4 numbers — split equally among winners</div>
+            <div class="pool-bar-wrap">
+              <div class="pool-bar"><div class="pool-bar-fill" style="width:35%;background:linear-gradient(90deg,var(--cream),var(--slate))"></div></div>
+            </div>
+          </div>
+          <div class="tier-pct">35%</div>
+        </div>
+        <div class="prize-tier">
+          <div class="tier-badge tier-3">
+            <div class="tier-dots">●●●</div>
+            <div>3-Match</div>
+          </div>
+          <div style="flex:1">
+            <div class="tier-name">Bronze 🥉</div>
+            <div class="tier-desc">Match any 3 numbers — most accessible tier</div>
+            <div class="pool-bar-wrap">
+              <div class="pool-bar"><div class="pool-bar-fill" style="width:25%;background:linear-gradient(90deg,#cd7f32,#a0622a)"></div></div>
+            </div>
+          </div>
+          <div class="tier-pct slate">25%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Charities -->
+  <section class="land-charity" id="charities">
+    <div class="inner">
+      <div class="section-tag">Our charity partners</div>
+      <h2 class="section-title" style="font-size:2rem; margin-bottom:0.5rem">Where your money goes</h2>
+      <p class="section-sub mb-4">Every subscriber selects one. Every payment moves the needle.</p>
+
+      <div class="grid-3" id="public-charities-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="section-tag">Ready to play?</div>
+    <h2 class="section-title">Join <span class="teal" id="cta-count">0</span> golfers<br>making a difference</h2>
+    <p class="section-sub" style="margin:1rem auto 2rem;max-width:400px">
+      Subscribe today. Enter your first score tomorrow. 
+      Your first draw is on us.
+    </p>
+    <button class="btn btn-primary btn-lg" onclick="openModal('modal-signup')">
+      Get Started — No long-term commitment
+    </button>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 GreenHeart · Built for Digital Heroes Trainee Selection · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
+  </footer>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PAGE: USER DASHBOARD
+════════════════════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <div class="dash-header">
+    <div class="inner flex items-center justify-between wrap gap-2">
+      <div>
+        <div class="dash-greeting">Welcome back</div>
+        <div class="dash-name" id="dash-user-name">Player</div>
+      </div>
+      <div class="flex gap-2 items-center wrap">
+        <span class="badge badge-teal" id="dash-sub-badge">● Active</span>
+        <button class="btn btn-outline btn-sm" onclick="openModal('modal-draw-results')">🎲 Latest Draw</button>
+        <button class="btn btn-ghost btn-sm" onclick="logout()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <!-- Stat row -->
+    <div class="dash-grid">
+      <div class="stat-card">
+        <div class="stat-label">Subscription</div>
+        <div class="stat-value teal" id="stat-sub-status">Active</div>
+        <div class="stat-sub" id="stat-sub-renews">Renews soon</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Draws Entered</div>
+        <div class="stat-value" id="stat-draws">0</div>
+        <div class="stat-sub">since joining</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Won</div>
+        <div class="stat-value gold" id="stat-won">£0</div>
+        <div class="stat-sub" id="stat-won-status">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Charity Given</div>
+        <div class="stat-value teal" id="stat-charity">£0</div>
+        <div class="stat-sub" id="stat-charity-name">—</div>
+      </div>
+    </div>
+
+    <!-- Main two-col -->
+    <div class="dash-two">
+      <!-- Left col -->
+      <div class="flex col gap-3">
+
+        <!-- Score entry -->
+        <div class="card">
+          <div class="flex items-center justify-between mb-2">
+            <div class="card-title" style="margin-bottom:0">My Stableford Scores</div>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-score')">+ Add Score</button>
+          </div>
+          <p style="font-size:0.78rem;color:var(--slate);margin-bottom:1rem">
+            Last 5 scores · newest first · 1 entry per date
+          </p>
+          <div class="score-list" id="score-list">
+            <div class="empty-state">
+              <div class="icon">⛳</div>
+              <p>No scores yet. Add your first round!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Winnings -->
+        <div class="card">
+          <div class="card-title">Winnings History</div>
+          <div id="winnings-list">
+            <div class="empty-state" style="padding:1.5rem">
+              <div class="icon">🏆</div>
+              <p>No winnings yet. Your first draw is coming!</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right col -->
+      <div class="flex col gap-3">
+
+        <!-- Next draw -->
+        <div class="card" style="background:linear-gradient(135deg,rgba(0,212,170,0.07),rgba(0,212,170,0.02))">
+          <div class="card-title">Next Draw</div>
+          <div style="font-family:var(--serif);font-size:1.6rem;font-weight:900;margin-bottom:0.5rem" id="dash-next-draw">
+            July 31, 2025
+          </div>
+          <div style="font-size:0.82rem;color:var(--slate)">Your entered scores:</div>
+          <div class="draw-numbers mt-2" id="dash-my-numbers">
+            <span style="font-size:0.82rem;color:var(--slate)">No scores entered yet</span>
+          </div>
+          <hr class="divider">
+          <div style="font-size:0.78rem;color:var(--slate)">Prize pool this month</div>
+          <div style="font-family:var(--serif);font-size:1.4rem;font-weight:900;color:var(--gold)" id="dash-pool">£0</div>
+        </div>
+
+        <!-- Charity -->
+        <div class="card">
+          <div class="card-title">My Charity</div>
+          <div id="dash-charity-display">
+            <div style="font-size:0.88rem;color:var(--slate)">Select a charity in settings</div>
+          </div>
+          <hr class="divider">
+          <div class="card-title">Contribution Rate</div>
+          <div class="range-wrap">
+            <input type="range" min="10" max="50" value="10" id="charity-pct-slider" oninput="updateCharityPct(this.value)">
+          </div>
+          <div class="range-val"><span id="charity-pct-val">10</span>% of subscription</div>
+          <div style="font-size:0.78rem;color:var(--slate);margin-top:0.35rem">Minimum 10% · Adjust anytime</div>
+          <button class="btn btn-outline btn-sm mt-2 w-full" onclick="saveCharityPct()">Save Contribution Rate</button>
+        </div>
+
+        <!-- Upload verification (only if winner) -->
+        <div class="card hidden" id="verify-card">
+          <div class="card-title">🏆 Winner Verification Required</div>
+          <p style="font-size:0.85rem;color:var(--slate);margin-bottom:1rem">
+            Congratulations! Please upload a screenshot of your scores from the golf platform to verify your win.
+          </p>
+          <label class="upload-zone">
+            <div class="upload-icon">📸</div>
+            <div>Click to upload proof screenshot</div>
+            <div style="font-size:0.75rem;margin-top:0.35rem">PNG, JPG up to 5MB</div>
+            <input type="file" accept="image/*" onchange="handleProofUpload(this)">
+          </label>
+          <div id="upload-status" class="mt-2"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PAGE: ADMIN
+════════════════════════════════════════════════ -->
+<div id="page-admin" class="page">
+  <div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-title">Overview</div>
+      <button class="admin-nav-btn active" onclick="adminSection('overview',this)">📊 Overview</button>
+
+      <div class="admin-sidebar-title">Management</div>
+      <button class="admin-nav-btn" onclick="adminSection('users',this)">👤 Users</button>
+      <button class="admin-nav-btn" onclick="adminSection('draws',this)">🎲 Draws</button>
+      <button class="admin-nav-btn" onclick="adminSection('charities',this)">💚 Charities</button>
+      <button class="admin-nav-btn" onclick="adminSection('winners',this)">🏆 Winners</button>
+
+      <div class="admin-sidebar-title">System</div>
+      <button class="admin-nav-btn" onclick="adminSection('reports',this)">📈 Reports</button>
+      <button class="btn btn-ghost btn-sm mt-4" onclick="logout()" style="width:100%;justify-content:flex-start;padding-left:0.75rem">⬅ Sign Out</button>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+
+      <!-- Overview -->
+      <div class="admin-section active" id="admin-overview">
+        <div class="admin-header">
+          <div class="admin-title">Admin Dashboard</div>
+          <div class="admin-sub">Platform overview and quick actions</div>
+        </div>
+        <div class="grid-4" style="margin-bottom:1.5rem">
+          <div class="stat-card">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value" id="a-stat-users">0</div>
+            <div class="stat-sub">registered</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active Subs</div>
+            <div class="stat-value teal" id="a-stat-subs">0</div>
+            <div class="stat-sub">this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Prize Pool</div>
+            <div class="stat-value gold" id="a-stat-pool">£0</div>
+            <div class="stat-sub">this draw</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Charity Total</div>
+            <div class="stat-value teal" id="a-stat-charity">£0</div>
+            <div class="stat-sub">all time</div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Prize Pool Breakdown</div>
+            <div id="admin-pool-breakdown">
+              <div class="pool-bar-wrap">
+                <div class="pool-bar-label"><span>5-Match Jackpot (40%)</span><span id="ap-5" class="gold">£0</span></div>
+                <div class="pool-bar"><div class="pool-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--gold),#E8A020)"></div></div>
+              </div>
+              <div class="pool-bar-wrap mt-2">
+                <div class="pool-bar-label"><span>4-Match Silver (35%)</span><span id="ap-4">£0</span></div>
+                <div class="pool-bar"><div class="pool-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--cream),var(--slate))"></div></div>
+              </div>
+              <div class="pool-bar-wrap mt-2">
+                <div class="pool-bar-label"><span>3-Match Bronze (25%)</span><span id="ap-3" class="slate">£0</span></div>
+                <div class="pool-bar"><div class="pool-bar-fill" style="width:100%;background:linear-gradient(90deg,#cd7f32,#a0622a)"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Recent Activity</div>
+            <div id="admin-activity" style="font-size:0.85rem;color:var(--slate)">
+              No activity yet.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users -->
+      <div class="admin-section" id="admin-users">
+        <div class="admin-header flex items-center justify-between">
+          <div>
+            <div class="admin-title">User Management</div>
+            <div class="admin-sub">View and manage all registered users</div>
+          </div>
+          <input class="form-input" style="max-width:240px" placeholder="Search users…" oninput="filterUsers(this.value)">
+        </div>
+        <div class="card" style="padding:0">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Plan</th>
+                  <th>Status</th>
+                  <th>Scores</th>
+                  <th>Charity</th>
+                  <th>Joined</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <tr><td colspan="7" style="text-align:center;color:var(--slate);padding:3rem">No users yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Draws -->
+      <div class="admin-section" id="admin-draws">
+        <div class="admin-header">
+          <div class="admin-title">Draw Management</div>
+          <div class="admin-sub">Configure, simulate, and publish monthly draws</div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Draw Configuration</div>
+            <div class="form-group">
+              <label class="form-label">Draw Logic</label>
+              <select class="form-input" id="draw-logic">
+                <option value="random">Random — standard lottery style</option>
+                <option value="algorithm">Algorithmic — weighted by score frequency</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Draw Month</label>
+              <input type="month" class="form-input" id="draw-month">
+            </div>
+            <div class="flex gap-2 wrap">
+              <button class="btn btn-outline btn-sm" onclick="simulateDraw()">🔮 Simulate</button>
+              <button class="btn btn-primary btn-sm" onclick="publishDraw()">📢 Publish Draw</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Simulation Result</div>
+            <div id="sim-result" style="font-size:0.85rem;color:var(--slate)">
+              Run a simulation to see draw numbers before publishing.
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-title">Draw History</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Month</th><th>Numbers Drawn</th><th>Jackpot</th><th>Status</th><th>Winners</th></tr></thead>
+              <tbody id="draws-table-body">
+                <tr><td colspan="5" style="text-align:center;color:var(--slate);padding:2rem">No draws published yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charities -->
+      <div class="admin-section" id="admin-charities">
+        <div class="admin-header flex items-center justify-between">
+          <div>
+            <div class="admin-title">Charity Management</div>
+            <div class="admin-sub">Add, edit, and manage charity listings</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-add-charity')">+ Add Charity</button>
+        </div>
+        <div class="grid-3" id="admin-charities-grid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Winners -->
+      <div class="admin-section" id="admin-winners">
+        <div class="admin-header">
+          <div class="admin-title">Winners & Verification</div>
+          <div class="admin-sub">Review submissions and mark payouts</div>
+        </div>
+        <div class="card" style="padding:0">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Winner</th><th>Draw</th><th>Tier</th><th>Amount</th><th>Proof</th><th>Status</th><th></th></tr></thead>
+              <tbody id="winners-table-body">
+                <tr><td colspan="7" style="text-align:center;color:var(--slate);padding:3rem">No winners yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reports -->
+      <div class="admin-section" id="admin-reports">
+        <div class="admin-header">
+          <div class="admin-title">Reports & Analytics</div>
+          <div class="admin-sub">Platform-wide statistics</div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Subscription Revenue</div>
+            <div id="report-revenue" class="mt-2" style="font-size:0.85rem;color:var(--slate)">
+              No data yet.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Charity Breakdown</div>
+            <div id="report-charity" class="mt-2" style="font-size:0.85rem;color:var(--slate)">
+              No data yet.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Draw Statistics</div>
+            <div id="report-draws" class="mt-2" style="font-size:0.85rem;color:var(--slate)">
+              No data yet.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Winner Payouts</div>
+            <div id="report-payouts" class="mt-2" style="font-size:0.85rem;color:var(--slate)">
+              No payouts yet.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODALS
+════════════════════════════════════════════════ -->
+
+<!-- LOGIN -->
+<div class="modal-overlay hidden" id="modal-login">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-login')">✕</button>
+    <div class="modal-title">Welcome back</div>
+    <div class="modal-sub">Sign in to your GreenHeart account</div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" type="email" id="login-email" placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" type="password" id="login-password" placeholder="••••••••">
+    </div>
+    <button class="btn btn-primary w-full" onclick="login()">Sign In</button>
+    <p style="text-align:center;margin-top:1rem;font-size:0.85rem;color:var(--slate)">
+      Don't have an account? <a href="#" onclick="switchModal('modal-login','modal-signup')" style="color:var(--teal)">Join now</a>
+    </p>
+    <p style="text-align:center;margin-top:0.5rem;font-size:0.78rem;color:var(--slate)">
+      Demo: <strong>admin@gh.com</strong> / <strong>admin123</strong> or <strong>user@gh.com</strong> / <strong>user123</strong>
+    </p>
+  </div>
+</div>
+
+<!-- SIGNUP (multi-step) -->
+<div class="modal-overlay hidden" id="modal-signup">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('modal-signup')">✕</button>
+    <div class="modal-title">Join GreenHeart</div>
+    <div class="modal-sub">Golf. Give. Win. — Takes 2 minutes.</div>
+
+    <div class="progress-steps" id="signup-steps">
+      <div class="progress-step active" id="step-indicator-1">Account</div>
+      <div class="progress-step" id="step-indicator-2">Plan</div>
+      <div class="progress-step" id="step-indicator-3">Charity</div>
+      <div class="progress-step" id="step-indicator-4">Done</div>
+    </div>
+
+    <!-- Step 1: Account -->
+    <div id="signup-step-1">
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" id="su-fname" placeholder="James">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" id="su-lname" placeholder="Anderson">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" id="su-email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="su-password" placeholder="Min 8 characters">
+      </div>
+      <button class="btn btn-primary w-full" onclick="signupStep(2)">Continue →</button>
+    </div>
+
+    <!-- Step 2: Plan -->
+    <div id="signup-step-2" class="hidden">
+      <div class="grid-2" style="margin-bottom:1.5rem">
+        <div class="plan-card selected" id="plan-monthly" onclick="selectPlan('monthly')">
+          <div class="plan-name">Monthly</div>
+          <div class="plan-price">£9<span style="font-size:1rem">.99</span></div>
+          <div class="plan-period">per month</div>
+          <div class="plan-features">
+            ✓ All platform features<br>
+            ✓ Monthly draw entry<br>
+            ✓ Charity contribution<br>
+            ✓ Cancel anytime
+          </div>
+        </div>
+        <div class="plan-card" id="plan-yearly" onclick="selectPlan('yearly')">
+          <div class="plan-name">Yearly <span class="badge badge-teal" style="font-size:0.65rem">Save 20%</span></div>
+          <div class="plan-price">£95<span style="font-size:1rem">.88</span></div>
+          <div class="plan-period">per year · £7.99/mo</div>
+          <div class="plan-features">
+            ✓ Everything in Monthly<br>
+            ✓ Priority draw entry<br>
+            ✓ 2 months free<br>
+            ✓ VIP winner support
+          </div>
+        </div>
+      </div>
+      <div class="card card-sm" style="background:rgba(0,212,170,0.05);border-color:rgba(0,212,170,0.2)">
+        <div style="font-size:0.8rem;color:var(--slate)">🔒 Secure payment powered by Stripe. Cancel or change plan anytime.</div>
+      </div>
+      <div class="flex gap-2 mt-3">
+        <button class="btn btn-outline" onclick="signupStep(1)">← Back</button>
+        <button class="btn btn-primary" style="flex:1" onclick="signupStep(3)">Continue to Charity →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Charity -->
+    <div id="signup-step-3" class="hidden">
+      <p style="font-size:0.85rem;color:var(--slate);margin-bottom:1rem">Choose where at least 10% of your subscription goes:</p>
+      <div id="signup-charity-list">
+        <!-- populated by JS -->
+      </div>
+      <div class="form-group mt-2">
+        <label class="form-label">Your contribution rate (min 10%)</label>
+        <div class="range-wrap">
+          <input type="range" min="10" max="50" value="10" id="su-charity-pct" oninput="document.getElementById('su-pct-val').textContent=this.value">
+        </div>
+        <div class="range-val"><span id="su-pct-val">10</span>%</div>
+      </div>
+      <div class="flex gap-2 mt-3">
+        <button class="btn btn-outline" onclick="signupStep(2)">← Back</button>
+        <button class="btn btn-primary" style="flex:1" onclick="signupStep(4)">Complete Signup →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Done -->
+    <div id="signup-step-4" class="hidden center">
+      <div class="confirm-icon">✓</div>
+      <h3 style="font-family:var(--serif);font-size:1.6rem;font-weight:900;margin-bottom:0.5rem">You're in!</h3>
+      <p style="color:var(--slate);font-size:0.9rem;margin-bottom:1.5rem">
+        Your account is active. Enter your first score and you're in the next draw.
+      </p>
+      <button class="btn btn-primary" onclick="closeModal('modal-signup');showPage('dashboard')">
+        Go to My Dashboard →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SCORE -->
+<div class="modal-overlay hidden" id="modal-add-score">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-add-score')">✕</button>
+    <div class="modal-title" id="score-modal-title">Add Score</div>
+    <div class="modal-sub">Stableford points from a single round</div>
+    <div class="form-group">
+      <label class="form-label">Date Played</label>
+      <input class="form-input" type="date" id="score-date">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Stableford Points (1–45)</label>
+      <input class="form-input" type="number" id="score-pts" min="1" max="45" placeholder="e.g. 36">
+      <div class="form-hint">Score range: 1 to 45 points</div>
+    </div>
+    <div class="form-error hidden" id="score-error"></div>
+    <input type="hidden" id="editing-score-date">
+    <button class="btn btn-primary w-full" onclick="saveScore()">Save Score</button>
+  </div>
+</div>
+
+<!-- DRAW RESULTS -->
+<div class="modal-overlay hidden" id="modal-draw-results">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('modal-draw-results')">✕</button>
+    <div class="modal-title">🎲 Latest Draw Results</div>
+    <div class="modal-sub" id="draw-result-date">No draws published yet</div>
+    <div id="draw-result-content">
+      <p style="color:var(--slate);font-size:0.9rem">Check back after the next draw is published by the administrator.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CHARITY (admin) -->
+<div class="modal-overlay hidden" id="modal-add-charity">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-add-charity')">✕</button>
+    <div class="modal-title" id="charity-modal-title">Add Charity</div>
+    <div class="modal-sub">Add a new charity to the platform</div>
+    <input type="hidden" id="editing-charity-id">
+    <div class="form-group">
+      <label class="form-label">Charity Name</label>
+      <input class="form-input" type="text" id="ch-name" placeholder="e.g. Help for Heroes">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-input" id="ch-desc" rows="3" placeholder="What this charity does…" style="resize:vertical"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Icon / Emoji</label>
+      <input class="form-input" type="text" id="ch-icon" placeholder="💚" maxlength="4">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-input" id="ch-category">
+        <option value="health">Health</option>
+        <option value="environment">Environment</option>
+        <option value="education">Education</option>
+        <option value="veterans">Veterans</option>
+        <option value="community">Community</option>
+        <option value="sport">Sport</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Featured</label>
+      <select class="form-input" id="ch-featured">
+        <option value="false">No</option>
+        <option value="true">Yes — Spotlight on homepage</option>
+      </select>
+    </div>
+    <button class="btn btn-primary w-full" onclick="saveCharity()">Save Charity</button>
+  </div>
+</div>
+
+<!-- EDIT USER SCORES (admin) -->
+<div class="modal-overlay hidden" id="modal-admin-user">
+  <div class="modal modal-wide">
+    <button class="modal-close" onclick="closeModal('modal-admin-user')">✕</button>
+    <div class="modal-title" id="admin-user-modal-title">User Details</div>
+    <div class="modal-sub" id="admin-user-modal-sub">Edit user information and scores</div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'admin-user-tab-scores')">Scores</button>
+      <button class="tab-btn" onclick="switchTab(this,'admin-user-tab-sub')">Subscription</button>
+      <button class="tab-btn" onclick="switchTab(this,'admin-user-tab-charity')">Charity</button>
+    </div>
+
+    <div id="admin-user-tab-scores" class="tab-content active">
+      <div id="admin-user-scores-list" class="score-list"></div>
+      <button class="btn btn-outline btn-sm mt-3" onclick="adminAddScoreForUser()">+ Add Score for User</button>
+    </div>
+    <div id="admin-user-tab-sub" class="tab-content">
+      <div id="admin-user-sub-info" style="font-size:0.88rem;color:var(--slate)"></div>
+    </div>
+    <div id="admin-user-tab-charity" class="tab-content">
+      <div id="admin-user-charity-info" style="font-size:0.88rem;color:var(--slate)"></div>
+    </div>
+    <input type="hidden" id="admin-viewing-user-id">
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT — APP ENGINE
+════════════════════════════════════════════════ -->
+<script>
+// ════════════════════════════════════════════════
+// DATA STORE (in-memory, simulates backend)
+// ════════════════════════════════════════════════
+const DB = {
+  users: [
+    {
+      id: 'admin1', email: 'admin@gh.com', password: 'admin123',
+      name: 'Admin User', role: 'admin', plan: 'yearly',
+      status: 'active', joinedAt: '2025-01-01',
+      charityId: 'c1', charityPct: 10,
+      scores: [], winnings: [], draws_entered: 3
+    },
+    {
+      id: 'user1', email: 'user@gh.com', password: 'user123',
+      name: 'Jamie Anderson', role: 'user', plan: 'monthly',
+      status: 'active', joinedAt: '2025-03-15',
+      charityId: 'c2', charityPct: 15,
+      scores: [
+        { date: '2025-07-01', points: 34 },
+        { date: '2025-06-25', points: 28 },
+        { date: '2025-06-18', points: 36 },
+        { date: '2025-06-10', points: 22 },
+        { date: '2025-05-30', points: 31 }
+      ],
+      winnings: [], draws_entered: 2
+    }
+  ],
+  charities: [
+    { id: 'c1', name: 'Golf Foundation', desc: 'Growing the game of golf for young people and those facing disadvantage.', icon: '⛳', category: 'sport', featured: true, raised: 1420 },
+    { id: 'c2', name: 'Macmillan Cancer', desc: 'Providing support and care for people living with cancer across the UK.', icon: '💚', category: 'health', featured: false, raised: 3870 },
+    { id: 'c3', name: 'RNLI', desc: 'Saving lives at sea — the Royal National Lifeboat Institution.', icon: '🌊', category: 'community', featured: false, raised: 980 },
+    { id: 'c4', name: 'Trees for Life', desc: 'Rewilding the Caledonian Forest and restoring ecosystems in the Scottish Highlands.', icon: '🌲', category: 'environment', featured: false, raised: 640 }
+  ],
+  draws: [],
+  winners: [],
+  currentUser: null,
+  selectedPlan: 'monthly',
+  selectedCharityId: null,
+  nextDrawDate: '2025-07-31',
+  jackpotRollover: 0,
+  activityLog: []
+};
+
+const PLANS = {
+  monthly: { price: 9.99, label: 'Monthly', renewal: '30 days' },
+  yearly:  { price: 95.88, label: 'Yearly (20% off)', renewal: '12 months' }
+};
+
+// ════════════════════════════════════════════════
+// ROUTING
+// ════════════════════════════════════════════════
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  window.scrollTo(0, 0);
+  if (pageId === 'dashboard') refreshDashboard();
+  if (pageId === 'admin')     refreshAdmin();
+}
+
+function scrollToSection(id) {
+  showPage('home');
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+}
+
+// ════════════════════════════════════════════════
+// MODALS
+// ════════════════════════════════════════════════
+function openModal(id)  { document.getElementById(id).classList.remove('hidden'); }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+function switchModal(close, open) { closeModal(close); openModal(open); }
+
+// ════════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════════
+function login() {
+  const email = document.getElementById('login-email').value.trim();
+  const pw    = document.getElementById('login-password').value;
+  const user  = DB.users.find(u => u.email === email && u.password === pw);
+  if (!user) { toast('Invalid email or password', 'error'); return; }
+  DB.currentUser = user;
+  closeModal('modal-login');
+  updateNavbar();
+  if (user.role === 'admin') { showPage('admin'); toast(`Welcome, ${user.name}! 👋`, 'success'); }
+  else                       { showPage('dashboard'); toast(`Welcome back, ${user.name}! 🏌️`, 'success'); }
+}
+
+function logout() {
+  DB.currentUser = null;
+  updateNavbar();
+  showPage('home');
+  toast('Signed out. See you on the fairway! ⛳', 'info');
+}
+
+function updateNavbar() {
+  const u = DB.currentUser;
+  const el = document.getElementById('nav-actions');
+  if (u) {
+    el.innerHTML = `
+      <span style="font-size:0.85rem;color:var(--slate)">${u.name}</span>
+      ${u.role === 'admin'
+        ? `<button class="btn btn-gold btn-sm" onclick="showPage('admin')">Admin Panel</button>`
+        : `<button class="btn btn-outline btn-sm" onclick="showPage('dashboard')">Dashboard</button>`}
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Sign Out</button>`;
+  } else {
+    el.innerHTML = `
+      <button class="btn btn-outline btn-sm" onclick="openModal('modal-login')">Sign In</button>
+      <button class="btn btn-primary btn-sm" onclick="openModal('modal-signup')">Join Now</button>`;
+  }
+}
+
+// ════════════════════════════════════════════════
+// SIGNUP FLOW
+// ════════════════════════════════════════════════
+let currentSignupStep = 1;
+
+function signupStep(step) {
+  if (step === 2) {
+    const fname = document.getElementById('su-fname').value.trim();
+    const lname = document.getElementById('su-lname').value.trim();
+    const email = document.getElementById('su-email').value.trim();
+    const pw    = document.getElementById('su-password').value;
+    if (!fname || !lname) { toast('Please enter your full name', 'error'); return; }
+    if (!email || !email.includes('@')) { toast('Please enter a valid email', 'error'); return; }
+    if (pw.length < 8) { toast('Password must be at least 8 characters', 'error'); return; }
+    if (DB.users.find(u => u.email === email)) { toast('Email already registered', 'error'); return; }
+  }
+  if (step === 3) {
+    renderSignupCharities();
+  }
+  if (step === 4) {
+    if (!DB.selectedCharityId) { toast('Please select a charity', 'error'); return; }
+    completeSignup();
+  }
+
+  // hide all steps
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById(`signup-step-${i}`);
+    const ind = document.getElementById(`step-indicator-${i}`);
+    if (el) el.classList.add('hidden');
+    if (ind) { ind.classList.remove('active','done'); if (i < step) ind.classList.add('done'); }
+  }
+  document.getElementById(`signup-step-${step}`).classList.remove('hidden');
+  const active = document.getElementById(`step-indicator-${step}`);
+  if (active) active.classList.add('active');
+  currentSignupStep = step;
+}
+
+function selectPlan(plan) {
+  DB.selectedPlan = plan;
+  document.getElementById('plan-monthly').classList.toggle('selected', plan === 'monthly');
+  document.getElementById('plan-yearly').classList.toggle('selected', plan === 'yearly');
+}
+
+function renderSignupCharities() {
+  const container = document.getElementById('signup-charity-list');
+  container.innerHTML = DB.charities.map(c => `
+    <div class="charity-option ${DB.selectedCharityId === c.id ? 'selected' : ''}" id="co-${c.id}" onclick="selectSignupCharity('${c.id}')">
+      <div class="charity-option-icon">${c.icon}</div>
+      <div>
+        <div class="charity-option-name">${c.name}</div>
+        <div class="charity-option-desc">${c.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+function selectSignupCharity(id) {
+  DB.selectedCharityId = id;
+  document.querySelectorAll('.charity-option').forEach(el => {
+    el.classList.toggle('selected', el.id === `co-${id}`);
+  });
+}
+
+function completeSignup() {
+  const fname  = document.getElementById('su-fname').value.trim();
+  const lname  = document.getElementById('su-lname').value.trim();
+  const email  = document.getElementById('su-email').value.trim();
+  const pw     = document.getElementById('su-password').value;
+  const pct    = parseInt(document.getElementById('su-charity-pct').value);
+
+  const newUser = {
+    id: 'u_' + Date.now(),
+    email, password: pw,
+    name: `${fname} ${lname}`,
+    role: 'user',
+    plan: DB.selectedPlan,
+    status: 'active',
+    joinedAt: new Date().toISOString().split('T')[0],
+    charityId: DB.selectedCharityId,
+    charityPct: pct,
+    scores: [], winnings: [], draws_entered: 0
+  };
+  DB.users.push(newUser);
+  DB.currentUser = newUser;
+  addActivity(`New subscriber: ${newUser.name} (${PLANS[newUser.plan].label})`);
+  updateNavbar();
+}
+
+// ════════════════════════════════════════════════
+// SCORES
+// ════════════════════════════════════════════════
+function openAddScore(editDate) {
+  const modal = document.getElementById('modal-add-score');
+  document.getElementById('score-modal-title').textContent = editDate ? 'Edit Score' : 'Add Score';
+  document.getElementById('score-date').value = editDate || '';
+  document.getElementById('score-pts').value  = '';
+  document.getElementById('editing-score-date').value = editDate || '';
+  document.getElementById('score-error').classList.add('hidden');
+
+  if (editDate) {
+    const sc = DB.currentUser.scores.find(s => s.date === editDate);
+    if (sc) document.getElementById('score-pts').value = sc.points;
+  }
+  openModal('modal-add-score');
+}
+
+function saveScore() {
+  const u       = DB.currentUser;
+  const date    = document.getElementById('score-date').value;
+  const pts     = parseInt(document.getElementById('score-pts').value);
+  const editDate= document.getElementById('editing-score-date').value;
+  const errEl   = document.getElementById('score-error');
+
+  if (!date) { showErr('Please select a date'); return; }
+  if (isNaN(pts) || pts < 1 || pts > 45) { showErr('Points must be between 1 and 45'); return; }
+
+  // Check for duplicate date (excluding current edit)
+  const dupCheck = u.scores.find(s => s.date === date && s.date !== editDate);
+  if (dupCheck) { showErr('A score for this date already exists. Edit or delete it first.'); return; }
+
+  if (editDate) {
+    // Edit existing
+    const idx = u.scores.findIndex(s => s.date === editDate);
+    if (idx !== -1) u.scores[idx] = { date, points: pts };
+  } else {
+    // Add new
+    u.scores.push({ date, points: pts });
+  }
+
+  // Keep only last 5 (oldest removed)
+  u.scores.sort((a,b) => b.date.localeCompare(a.date));
+  if (u.scores.length > 5) u.scores = u.scores.slice(0, 5);
+
+  closeModal('modal-add-score');
+  toast(editDate ? 'Score updated ✓' : 'Score added ✓', 'success');
+  refreshDashboard();
+
+  function showErr(msg) {
+    errEl.textContent = msg;
+    errEl.classList.remove('hidden');
+  }
+}
+
+function deleteScore(date) {
+  if (!confirm(`Delete score for ${formatDate(date)}?`)) return;
+  DB.currentUser.scores = DB.currentUser.scores.filter(s => s.date !== date);
+  refreshDashboard();
+  toast('Score removed', 'info');
+}
+
+// ════════════════════════════════════════════════
+// DASHBOARD REFRESH
+// ════════════════════════════════════════════════
+function refreshDashboard() {
+  const u = DB.currentUser;
+  if (!u) return;
+
+  document.getElementById('dash-user-name').textContent = u.name;
+
+  // Stats
+  const plan = PLANS[u.plan];
+  document.getElementById('stat-sub-status').textContent = u.status === 'active' ? 'Active' : 'Lapsed';
+  document.getElementById('stat-sub-renews').textContent = `${plan.label} · renews in ${plan.renewal}`;
+  document.getElementById('stat-draws').textContent = u.draws_entered;
+
+  const totalWon = u.winnings.reduce((s,w) => s + w.amount, 0);
+  document.getElementById('stat-won').textContent = `£${totalWon.toFixed(2)}`;
+  document.getElementById('stat-won-status').textContent = u.winnings.length ? `${u.winnings.length} prize(s)` : 'No wins yet';
+
+  const charityTotal = (plan.price * (u.charityPct / 100) * u.draws_entered).toFixed(2);
+  document.getElementById('stat-charity').textContent = `£${charityTotal}`;
+  const ch = DB.charities.find(c => c.id === u.charityId);
+  document.getElementById('stat-charity-name').textContent = ch ? ch.name : '—';
+
+  // Score list
+  const scoreList = document.getElementById('score-list');
+  if (!u.scores.length) {
+    scoreList.innerHTML = `<div class="empty-state"><div class="icon">⛳</div><p>No scores yet. Add your first round!</p></div>`;
+  } else {
+    const sorted = [...u.scores].sort((a,b) => b.date.localeCompare(a.date));
+    scoreList.innerHTML = sorted.map((s, i) => `
+      <div class="score-item">
+        <div class="score-rank">#${i+1}</div>
+        <div class="score-date">${formatDate(s.date)}</div>
+        <div class="score-pts">${s.points} pts</div>
+        <div class="score-actions">
+          <button class="icon-btn" onclick="openAddScore('${s.date}')" title="Edit">✏</button>
+          <button class="icon-btn danger" onclick="deleteScore('${s.date}')" title="Delete">🗑</button>
+        </div>
+      </div>`).join('');
+  }
+
+  // Draw numbers preview
+  const numsEl = document.getElementById('dash-my-numbers');
+  if (u.scores.length) {
+    const sorted2 = [...u.scores].sort((a,b) => b.date.localeCompare(a.date));
+    numsEl.innerHTML = sorted2.map(s => `<div class="draw-ball">${s.points}</div>`).join('');
+  } else {
+    numsEl.innerHTML = `<span style="font-size:0.82rem;color:var(--slate)">No scores entered yet</span>`;
+  }
+
+  // Pool
+  const poolAmt = calcPool();
+  document.getElementById('dash-pool').textContent = `£${poolAmt.toFixed(2)}`;
+  document.getElementById('dash-next-draw').textContent = formatDate(DB.nextDrawDate);
+
+  // Charity
+  const dashCharity = document.getElementById('dash-charity-display');
+  if (ch) {
+    dashCharity.innerHTML = `
+      <div style="font-size:2.5rem;margin-bottom:0.5rem">${ch.icon}</div>
+      <div style="font-weight:700;margin-bottom:0.25rem">${ch.name}</div>
+      <div style="font-size:0.82rem;color:var(--slate)">${ch.desc}</div>`;
+  }
+  document.getElementById('charity-pct-slider').value = u.charityPct;
+  document.getElementById('charity-pct-val').textContent = u.charityPct;
+
+  // Winnings
+  const winList = document.getElementById('winnings-list');
+  if (!u.winnings.length) {
+    winList.innerHTML = `<div class="empty-state" style="padding:1.5rem"><div class="icon">🏆</div><p>No winnings yet. Your first draw is coming!</p></div>`;
+  } else {
+    winList.innerHTML = u.winnings.map(w => `
+      <div class="win-card">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="win-amount">£${w.amount.toFixed(2)}</div>
+            <div class="win-draw">${w.draw} · ${w.tier}</div>
+          </div>
+          <span class="badge ${w.status === 'paid' ? 'badge-teal' : w.status === 'verified' ? 'badge-gold' : 'badge-slate'}">
+            ${w.status}
+          </span>
+        </div>
+      </div>`).join('');
+  }
+
+  // Sub badge
+  document.getElementById('dash-sub-badge').textContent = `● ${u.status === 'active' ? 'Active' : 'Inactive'}`;
+  document.getElementById('dash-sub-badge').className = `badge ${u.status === 'active' ? 'badge-teal' : 'badge-red'}`;
+}
+
+function updateCharityPct(val) {
+  document.getElementById('charity-pct-val').textContent = val;
+}
+
+function saveCharityPct() {
+  if (!DB.currentUser) return;
+  DB.currentUser.charityPct = parseInt(document.getElementById('charity-pct-slider').value);
+  toast('Contribution rate saved ✓', 'success');
+  refreshDashboard();
+}
+
+function handleProofUpload(input) {
+  if (!input.files[0]) return;
+  document.getElementById('upload-status').innerHTML = `
+    <div class="badge badge-gold">📸 ${input.files[0].name} — Submitted for review</div>`;
+  toast('Proof uploaded! Admin will verify shortly.', 'success');
+  // In real app: upload to storage, create winner record pending status
+}
+
+// ════════════════════════════════════════════════
+// DRAW ENGINE
+// ════════════════════════════════════════════════
+function calcPool() {
+  const activeSubs = DB.users.filter(u => u.status === 'active' && u.role !== 'admin');
+  const monthlyRevenue = activeSubs.reduce((sum, u) => {
+    return sum + (u.plan === 'yearly' ? PLANS.yearly.price / 12 : PLANS.monthly.price);
+  }, 0);
+  const prizeSharePct = 0.5; // 50% of revenue goes to prize pool
+  return monthlyRevenue * prizeSharePct + DB.jackpotRollover;
+}
+
+function calcPoolBreakdown() {
+  const pool = calcPool();
+  return {
+    total: pool,
+    five:  pool * 0.40,
+    four:  pool * 0.35,
+    three: pool * 0.25
+  };
+}
+
+function simulateDraw() {
+  const logic = document.getElementById('draw-logic').value;
+  const nums = generateDrawNumbers(logic);
+  const breakdown = calcPoolBreakdown();
+
+  const simEl = document.getElementById('sim-result');
+  simEl.innerHTML = `
+    <p style="font-size:0.78rem;color:var(--teal);font-weight:600;margin-bottom:0.75rem">SIMULATION — Not Published</p>
+    <p style="font-size:0.82rem;color:var(--slate);margin-bottom:0.75rem">Logic: ${logic === 'random' ? 'Random Draw' : 'Algorithmic (score-weighted)'}</p>
+    <div class="draw-numbers mb-3">${nums.map(n => `<div class="draw-ball">${n}</div>`).join('')}</div>
+    <div style="font-size:0.82rem">
+      <div class="flex justify-between" style="margin-bottom:0.35rem">
+        <span class="slate">5-Match Jackpot (40%)</span><span class="gold">£${breakdown.five.toFixed(2)}</span>
+      </div>
+      <div class="flex justify-between" style="margin-bottom:0.35rem">
+        <span class="slate">4-Match Silver (35%)</span><span>£${breakdown.four.toFixed(2)}</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="slate">3-Match Bronze (25%)</span><span class="slate">£${breakdown.three.toFixed(2)}</span>
+      </div>
+    </div>
+    <p style="font-size:0.72rem;color:var(--slate);margin-top:1rem">Click "Publish Draw" to make this official.</p>`;
+  toast('Simulation complete', 'info');
+}
+
+function generateDrawNumbers(logic) {
+  if (logic === 'random') {
+    const nums = new Set();
+    while (nums.size < 5) nums.add(Math.floor(Math.random() * 45) + 1);
+    return [...nums].sort((a,b) => a - b);
+  } else {
+    // Algorithmic: weight by score frequency across all users
+    const freq = {};
+    DB.users.forEach(u => u.scores.forEach(s => { freq[s.points] = (freq[s.points] || 0) + 1; }));
+    const allNums = Array.from({length:45}, (_,i) => i+1);
+    allNums.sort((a,b) => (freq[b]||0) - (freq[a]||0));
+    return allNums.slice(0, 5).sort((a,b) => a - b);
+  }
+}
+
+function publishDraw() {
+  const logic    = document.getElementById('draw-logic').value;
+  const month    = document.getElementById('draw-month').value || new Date().toISOString().substring(0,7);
+  const nums     = generateDrawNumbers(logic);
+  const breakdown= calcPoolBreakdown();
+
+  // Check for existing draw this month
+  if (DB.draws.find(d => d.month === month)) {
+    toast('A draw for this month already exists', 'error'); return;
+  }
+
+  // Find winners
+  const winners = [];
+  DB.users.filter(u => u.role !== 'admin' && u.status === 'active').forEach(u => {
+    const userNums = u.scores.map(s => s.points);
+    const matches  = nums.filter(n => userNums.includes(n)).length;
+    let tier = null, amount = 0;
+    if (matches === 5) { tier = '5-Match Jackpot 🏆'; amount = breakdown.five; }
+    else if (matches === 4) { tier = '4-Match Silver 🥈'; amount = breakdown.four / 0.1; } // split later
+    else if (matches === 3) { tier = '3-Match Bronze 🥉'; amount = breakdown.three / 0.1; }
+    if (tier) winners.push({ userId: u.id, userName: u.name, tier, amount, matches });
+  });
+
+  // Split prizes among same-tier winners
+  const tiers = {};
+  winners.forEach(w => { tiers[w.tier] = (tiers[w.tier] || []).concat(w); });
+  winners.forEach(w => {
+    const split = w.matches === 5 ? breakdown.five :
+                  w.matches === 4 ? breakdown.four / tiers[w.tier].length :
+                  breakdown.three / tiers[w.tier].length;
+    w.amount = split;
+  });
+
+  // Jackpot rollover
+  const hasJackpot = winners.some(w => w.matches === 5);
+  if (!hasJackpot) DB.jackpotRollover += breakdown.five;
+  else DB.jackpotRollover = 0;
+
+  // Add to DB
+  const draw = { id: 'd_' + Date.now(), month, numbers: nums, breakdown, winners, logic, publishedAt: new Date().toISOString(), jackpotRolled: !hasJackpot };
+  DB.draws.push(draw);
+
+  // Add winnings to users
+  winners.forEach(w => {
+    const user = DB.users.find(u => u.id === w.userId);
+    if (user) {
+      user.winnings.push({ draw: month, tier: w.tier, amount: w.amount, status: 'pending' });
+      DB.winners.push({ id: 'win_' + Date.now() + Math.random(), userId: w.userId, userName: w.userName, draw: month, tier: w.tier, amount: w.amount, status: 'pending', proof: null });
+    }
+  });
+
+  addActivity(`Draw published for ${month} · ${winners.length} winner(s) · Pool: £${breakdown.total.toFixed(2)}`);
+  toast(`Draw published! ${winners.length} winner(s) found 🎉`, 'success');
+  refreshAdmin();
+  refreshDrawResults();
+}
+
+function refreshDrawResults() {
+  const last = DB.draws[DB.draws.length - 1];
+  if (!last) return;
+  const u = DB.currentUser;
+
+  document.getElementById('draw-result-date').textContent = `Draw: ${last.month} · Published ${new Date(last.publishedAt).toLocaleDateString()}`;
+
+  let html = `
+    <div style="margin-bottom:1rem">
+      <div style="font-size:0.78rem;color:var(--slate);margin-bottom:0.5rem">Drawn Numbers</div>
+      <div class="draw-numbers">`;
+
+  const myNums = u ? u.scores.map(s => s.points) : [];
+  last.numbers.forEach(n => {
+    const isMatch = myNums.includes(n);
+    html += `<div class="draw-ball ${isMatch ? 'match' : ''}">${n}</div>`;
+  });
+
+  html += `</div></div>
+    <div class="grid-3" style="gap:0.75rem;margin-bottom:1rem">
+      <div class="card card-sm">
+        <div class="card-title">5-Match Jackpot</div>
+        <div class="gold" style="font-weight:700">£${last.breakdown.five.toFixed(2)}</div>
+        ${last.jackpotRolled ? '<div style="font-size:0.75rem;color:var(--slate)">Rolled over →</div>' : ''}
+      </div>
+      <div class="card card-sm">
+        <div class="card-title">4-Match Silver</div>
+        <div style="font-weight:700">£${last.breakdown.four.toFixed(2)}</div>
+      </div>
+      <div class="card card-sm">
+        <div class="card-title">3-Match Bronze</div>
+        <div class="slate" style="font-weight:700">£${last.breakdown.three.toFixed(2)}</div>
+      </div>
+    </div>`;
+
+  if (last.winners.length === 0) {
+    html += `<div class="card card-sm" style="text-align:center;color:var(--slate)">No winners this draw. Jackpot carries forward!</div>`;
+  } else {
+    html += `<div class="card-title">Winners</div>` + last.winners.map(w => `
+      <div class="card card-sm mb-1" style="display:flex;align-items:center;justify-content:space-between">
+        <div><div style="font-weight:600">${w.userName}</div><div style="font-size:0.78rem;color:var(--slate)">${w.tier}</div></div>
+        <div class="gold" style="font-weight:700">£${w.amount.toFixed(2)}</div>
+      </div>`).join('');
+  }
+
+  document.getElementById('draw-result-content').innerHTML = html;
+}
+
+// ════════════════════════════════════════════════
+// CHARITY
+// ════════════════════════════════════════════════
+function renderPublicCharities() {
+  const container = document.getElementById('public-charities-grid');
+  container.innerHTML = DB.charities.map(c => `
+    <div class="charity-card">
+      <div class="charity-img">${c.icon}</div>
+      <div class="charity-body">
+        <div class="charity-name">${c.name}</div>
+        <div class="charity-desc">${c.desc}</div>
+        <div class="charity-raised">💚 £${c.raised.toLocaleString()} raised</div>
+      </div>
+    </div>`).join('');
+}
+
+function saveCharity() {
+  const name     = document.getElementById('ch-name').value.trim();
+  const desc     = document.getElementById('ch-desc').value.trim();
+  const icon     = document.getElementById('ch-icon').value.trim() || '💚';
+  const category = document.getElementById('ch-category').value;
+  const featured = document.getElementById('ch-featured').value === 'true';
+  const editId   = document.getElementById('editing-charity-id').value;
+
+  if (!name || !desc) { toast('Please fill in all fields', 'error'); return; }
+
+  if (editId) {
+    const idx = DB.charities.findIndex(c => c.id === editId);
+    if (idx !== -1) DB.charities[idx] = { ...DB.charities[idx], name, desc, icon, category, featured };
+  } else {
+    DB.charities.push({ id: 'c_' + Date.now(), name, desc, icon, category, featured, raised: 0 });
+  }
+
+  closeModal('modal-add-charity');
+  toast(editId ? 'Charity updated ✓' : 'Charity added ✓', 'success');
+  refreshAdmin();
+  renderPublicCharities();
+}
+
+function editCharity(id) {
+  const c = DB.charities.find(c => c.id === id);
+  if (!c) return;
+  document.getElementById('charity-modal-title').textContent = 'Edit Charity';
+  document.getElementById('editing-charity-id').value = id;
+  document.getElementById('ch-name').value     = c.name;
+  document.getElementById('ch-desc').value     = c.desc;
+  document.getElementById('ch-icon').value     = c.icon;
+  document.getElementById('ch-category').value = c.category;
+  document.getElementById('ch-featured').value = c.featured.toString();
+  openModal('modal-add-charity');
+}
+
+function deleteCharity(id) {
+  if (!confirm('Delete this charity? Users who selected it will need to update their choice.')) return;
+  DB.charities = DB.charities.filter(c => c.id !== id);
+  toast('Charity removed', 'info');
+  refreshAdmin();
+  renderPublicCharities();
+}
+
+// ════════════════════════════════════════════════
+// ADMIN
+// ════════════════════════════════════════════════
+function adminSection(id, btn) {
+  document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.admin-nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('admin-' + id).classList.add('active');
+  btn.classList.add('active');
+  refreshAdmin(id);
+}
+
+function refreshAdmin(section) {
+  const activeSubs = DB.users.filter(u => u.status === 'active' && u.role !== 'admin');
+  const pool       = calcPool();
+  const breakdown  = calcPoolBreakdown();
+  const charTotal  = DB.users.filter(u => u.role !== 'admin').reduce((s,u) => {
+    const plan = PLANS[u.plan] || PLANS.monthly;
+    return s + (plan.price * (u.charityPct/100) * u.draws_entered);
+  }, 0);
+
+  // Overview stats
+  document.getElementById('a-stat-users').textContent = DB.users.filter(u => u.role !== 'admin').length;
+  document.getElementById('a-stat-subs').textContent  = activeSubs.length;
+  document.getElementById('a-stat-pool').textContent  = `£${pool.toFixed(2)}`;
+  document.getElementById('a-stat-charity').textContent = `£${charTotal.toFixed(2)}`;
+  document.getElementById('ap-5').textContent = `£${breakdown.five.toFixed(2)}`;
+  document.getElementById('ap-4').textContent = `£${breakdown.four.toFixed(2)}`;
+  document.getElementById('ap-3').textContent = `£${breakdown.three.toFixed(2)}`;
+
+  // Public counters
+  document.getElementById('total-pool').textContent = `£${pool.toFixed(2)}`;
+  document.getElementById('pool-subs').textContent  = `${activeSubs.length} subscribers`;
+  document.getElementById('charity-total').textContent = `£${charTotal.toFixed(0)}`;
+  document.getElementById('charity-subs').textContent = activeSubs.length;
+  document.getElementById('cta-count').textContent   = activeSubs.length;
+
+  // Users table
+  renderUsersTable(DB.users.filter(u => u.role !== 'admin'));
+
+  // Charities admin grid
+  const chGrid = document.getElementById('admin-charities-grid');
+  chGrid.innerHTML = DB.charities.map(c => `
+    <div class="card">
+      <div style="font-size:2rem;margin-bottom:0.5rem">${c.icon}</div>
+      <div style="font-weight:700;margin-bottom:0.25rem">${c.name} ${c.featured ? '<span class="badge badge-teal">Featured</span>':''}</div>
+      <div style="font-size:0.8rem;color:var(--slate);margin-bottom:0.75rem">${c.desc}</div>
+      <div style="font-size:0.82rem;color:var(--teal);margin-bottom:0.75rem">£${c.raised.toLocaleString()} raised · ${c.category}</div>
+      <div class="flex gap-1">
+        <button class="btn btn-outline btn-sm" onclick="editCharity('${c.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCharity('${c.id}')">Delete</button>
+      </div>
+    </div>`).join('');
+
+  // Draws table
+  const drawsBody = document.getElementById('draws-table-body');
+  if (!DB.draws.length) {
+    drawsBody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--slate);padding:2rem">No draws published yet.</td></tr>`;
+  } else {
+    drawsBody.innerHTML = DB.draws.map(d => `
+      <tr>
+        <td>${d.month}</td>
+        <td><div class="draw-numbers" style="gap:0.3rem">${d.numbers.map(n=>`<div class="draw-ball" style="width:32px;height:32px;font-size:0.8rem">${n}</div>`).join('')}</div></td>
+        <td class="gold">£${d.breakdown.five.toFixed(2)}${d.jackpotRolled ? ' 🔄' : ''}</td>
+        <td><span class="badge badge-teal">Published</span></td>
+        <td>${d.winners.length} winner(s)</td>
+      </tr>`).join('');
+  }
+
+  // Winners table
+  const winnersBody = document.getElementById('winners-table-body');
+  if (!DB.winners.length) {
+    winnersBody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--slate);padding:3rem">No winners yet.</td></tr>`;
+  } else {
+    winnersBody.innerHTML = DB.winners.map(w => `
+      <tr>
+        <td>${w.userName}</td>
+        <td>${w.draw}</td>
+        <td>${w.tier}</td>
+        <td class="gold">£${w.amount.toFixed(2)}</td>
+        <td>${w.proof ? '<span class="badge badge-teal">Submitted</span>' : '<span class="badge badge-slate">Pending</span>'}</td>
+        <td><span class="badge ${w.status==='paid'?'badge-teal':w.status==='verified'?'badge-gold':'badge-slate'}">${w.status}</span></td>
+        <td>
+          ${w.status === 'pending' ? `<button class="btn btn-sm btn-outline" onclick="verifyWinner('${w.id}')">Verify</button>` : ''}
+          ${w.status === 'verified' ? `<button class="btn btn-sm btn-gold" onclick="markPaid('${w.id}')">Mark Paid</button>` : ''}
+        </td>
+      </tr>`).join('');
+  }
+
+  // Reports
+  document.getElementById('report-revenue').innerHTML = `
+    <div class="flex justify-between mb-1"><span class="slate">Monthly revenue</span><span>£${(activeSubs.filter(u=>u.plan==='monthly').length*9.99).toFixed(2)}</span></div>
+    <div class="flex justify-between mb-1"><span class="slate">Yearly revenue</span><span>£${(activeSubs.filter(u=>u.plan==='yearly').length*95.88).toFixed(2)}</span></div>
+    <div class="flex justify-between"><span class="slate">Prize pool</span><span class="gold">£${pool.toFixed(2)}</span></div>`;
+
+  const charityBreak = {};
+  DB.users.filter(u=>u.role!=='admin').forEach(u => {
+    const ch = DB.charities.find(c=>c.id===u.charityId);
+    if (ch) charityBreak[ch.name] = (charityBreak[ch.name] || 0) + (PLANS[u.plan||'monthly'].price * u.charityPct/100 * Math.max(u.draws_entered,1));
+  });
+  document.getElementById('report-charity').innerHTML = Object.entries(charityBreak).map(([k,v]) =>
+    `<div class="flex justify-between mb-1"><span class="slate">${k}</span><span class="teal">£${v.toFixed(2)}</span></div>`
+  ).join('') || 'No charity data yet.';
+
+  document.getElementById('report-draws').innerHTML = `
+    <div class="flex justify-between mb-1"><span class="slate">Total draws</span><span>${DB.draws.length}</span></div>
+    <div class="flex justify-between mb-1"><span class="slate">Total winners</span><span>${DB.winners.length}</span></div>
+    <div class="flex justify-between"><span class="slate">Jackpot rollover</span><span class="gold">£${DB.jackpotRollover.toFixed(2)}</span></div>`;
+
+  const paidTotal = DB.winners.filter(w=>w.status==='paid').reduce((s,w)=>s+w.amount,0);
+  document.getElementById('report-payouts').innerHTML = DB.winners.length
+    ? `<div class="flex justify-between mb-1"><span class="slate">Total payouts</span><span class="gold">£${paidTotal.toFixed(2)}</span></div>
+       <div class="flex justify-between mb-1"><span class="slate">Pending</span><span>${DB.winners.filter(w=>w.status==='pending').length}</span></div>
+       <div class="flex justify-between"><span class="slate">Paid</span><span class="teal">${DB.winners.filter(w=>w.status==='paid').length}</span></div>`
+    : 'No payouts yet.';
+
+  // Activity
+  document.getElementById('admin-activity').innerHTML = DB.activityLog.length
+    ? DB.activityLog.slice(-5).reverse().map(a => `<div style="padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.8rem">${a}</div>`).join('')
+    : 'No activity yet.';
+
+  // Draw month default
+  const now = new Date();
+  document.getElementById('draw-month').value = now.toISOString().substring(0,7);
+}
+
+function renderUsersTable(users) {
+  const body = document.getElementById('users-table-body');
+  if (!users.length) {
+    body.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--slate);padding:3rem">No users yet.</td></tr>`;
+    return;
+  }
+  body.innerHTML = users.map(u => {
+    const ch = DB.charities.find(c => c.id === u.charityId);
+    return `<tr>
+      <td><div class="flex items-center gap-2">
+        <div class="user-avatar">${u.name[0]}</div>
+        <div><div style="font-weight:600;font-size:0.88rem">${u.name}</div>
+        <div style="font-size:0.75rem;color:var(--slate)">${u.email}</div></div>
+      </div></td>
+      <td><span class="badge ${u.plan==='yearly'?'badge-gold':'badge-slate'}">${u.plan}</span></td>
+      <td><span class="badge ${u.status==='active'?'badge-teal':'badge-red'}">${u.status}</span></td>
+      <td style="font-family:var(--mono)">${u.scores.length}/5</td>
+      <td>${ch ? ch.icon + ' ' + ch.name : '—'}</td>
+      <td style="color:var(--slate);font-size:0.82rem">${u.joinedAt}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="viewAdminUser('${u.id}')">View</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterUsers(q) {
+  const users = DB.users.filter(u => u.role !== 'admin' &&
+    (u.name.toLowerCase().includes(q.toLowerCase()) || u.email.toLowerCase().includes(q.toLowerCase())));
+  renderUsersTable(users);
+}
+
+function viewAdminUser(id) {
+  const u = DB.users.find(u => u.id === id);
+  if (!u) return;
+  document.getElementById('admin-viewing-user-id').value = id;
+  document.getElementById('admin-user-modal-title').textContent = u.name;
+  document.getElementById('admin-user-modal-sub').textContent = u.email + ' · ' + u.plan;
+
+  // Scores tab
+  const ch = DB.charities.find(c => c.id === u.charityId);
+  const scoresList = document.getElementById('admin-user-scores-list');
+  if (!u.scores.length) {
+    scoresList.innerHTML = `<div class="empty-state"><div class="icon">⛳</div><p>No scores yet</p></div>`;
+  } else {
+    const sorted = [...u.scores].sort((a,b) => b.date.localeCompare(a.date));
+    scoresList.innerHTML = sorted.map((s,i) => `
+      <div class="score-item">
+        <div class="score-rank">#${i+1}</div>
+        <div class="score-date">${formatDate(s.date)}</div>
+        <div class="score-pts">${s.points} pts</div>
+        <div class="score-actions">
+          <button class="icon-btn" onclick="adminEditUserScore('${id}','${s.date}')">✏</button>
+          <button class="icon-btn danger" onclick="adminDeleteUserScore('${id}','${s.date}')">🗑</button>
+        </div>
+      </div>`).join('');
+  }
+
+  // Sub tab
+  document.getElementById('admin-user-sub-info').innerHTML = `
+    <div class="flex justify-between mb-1"><span class="slate">Plan</span><span>${u.plan}</span></div>
+    <div class="flex justify-between mb-1"><span class="slate">Status</span><span class="${u.status==='active'?'teal':'red'}">${u.status}</span></div>
+    <div class="flex justify-between mb-1"><span class="slate">Joined</span><span>${u.joinedAt}</span></div>
+    <div class="flex justify-between"><span class="slate">Draws entered</span><span>${u.draws_entered}</span></div>
+    <hr class="divider">
+    <div class="flex gap-2 mt-2">
+      ${u.status === 'active'
+        ? `<button class="btn btn-danger btn-sm" onclick="toggleUserStatus('${id}','inactive')">Suspend</button>`
+        : `<button class="btn btn-primary btn-sm" onclick="toggleUserStatus('${id}','active')">Reactivate</button>`}
+    </div>`;
+
+  // Charity tab
+  document.getElementById('admin-user-charity-info').innerHTML = `
+    <div class="flex justify-between mb-1"><span class="slate">Charity</span><span>${ch ? ch.icon + ' ' + ch.name : 'None selected'}</span></div>
+    <div class="flex justify-between"><span class="slate">Contribution</span><span class="teal">${u.charityPct}%</span></div>`;
+
+  openModal('modal-admin-user');
+}
+
+function adminEditUserScore(userId, date) {
+  const u = DB.users.find(u => u.id === userId);
+  if (!u) return;
+  const newPts = prompt(`Edit score for ${formatDate(date)} (1-45):`, u.scores.find(s=>s.date===date)?.points);
+  if (newPts === null) return;
+  const pts = parseInt(newPts);
+  if (isNaN(pts) || pts < 1 || pts > 45) { toast('Invalid score — must be 1 to 45', 'error'); return; }
+  const sc = u.scores.find(s => s.date === date);
+  if (sc) { sc.points = pts; toast('Score updated ✓', 'success'); viewAdminUser(userId); refreshAdmin(); }
+}
+
+function adminDeleteUserScore(userId, date) {
+  if (!confirm('Delete this score?')) return;
+  const u = DB.users.find(u => u.id === userId);
+  if (!u) return;
+  u.scores = u.scores.filter(s => s.date !== date);
+  toast('Score deleted', 'info');
+  viewAdminUser(userId);
+  refreshAdmin();
+}
+
+function adminAddScoreForUser() {
+  const userId = document.getElementById('admin-viewing-user-id').value;
+  const u = DB.users.find(u => u.id === userId);
+  if (!u) return;
+  const date = prompt('Date (YYYY-MM-DD):');
+  if (!date) return;
+  if (u.scores.find(s=>s.date===date)) { toast('Score already exists for this date', 'error'); return; }
+  const ptsRaw = prompt('Stableford points (1-45):');
+  if (ptsRaw === null) return;
+  const pts = parseInt(ptsRaw);
+  if (isNaN(pts)||pts<1||pts>45) { toast('Invalid score', 'error'); return; }
+  u.scores.push({date, points: pts});
+  u.scores.sort((a,b)=>b.date.localeCompare(a.date));
+  if (u.scores.length > 5) u.scores = u.scores.slice(0,5);
+  toast('Score added ✓', 'success');
+  viewAdminUser(userId);
+  refreshAdmin();
+}
+
+function toggleUserStatus(id, status) {
+  const u = DB.users.find(u => u.id === id);
+  if (!u) return;
+  u.status = status;
+  toast(`User ${status === 'active' ? 'reactivated' : 'suspended'} ✓`, status === 'active' ? 'success' : 'info');
+  closeModal('modal-admin-user');
+  refreshAdmin();
+}
+
+function verifyWinner(id) {
+  const w = DB.winners.find(w => w.id === id);
+  if (!w) return;
+  w.status = 'verified';
+  const u = DB.users.find(u => u.id === w.userId);
+  if (u) { const uw = u.winnings.find(win => win.draw === w.draw && win.tier === w.tier); if (uw) uw.status = 'verified'; }
+  toast('Winner verified ✓', 'success');
+  refreshAdmin();
+}
+
+function markPaid(id) {
+  const w = DB.winners.find(w => w.id === id);
+  if (!w) return;
+  w.status = 'paid';
+  const u = DB.users.find(u => u.id === w.userId);
+  if (u) { const uw = u.winnings.find(win => win.draw === w.draw && win.tier === w.tier); if (uw) uw.status = 'paid'; }
+  toast(`£${w.amount.toFixed(2)} marked as paid ✓`, 'success');
+  addActivity(`Payout: £${w.amount.toFixed(2)} to ${w.userName} (${w.tier})`);
+  refreshAdmin();
+}
+
+// ════════════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════════════
+function switchTab(btn, tabId) {
+  const parent = btn.closest('.modal') || btn.closest('.admin-main');
+  if (!parent) return;
+  parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  parent.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+// ════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════
+function toast(msg, type = 'success') {
+  const icons = { success: '✓', error: '✕', info: 'ℹ' };
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  el.innerHTML = `<span>${icons[type]}</span> ${msg}`;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function addActivity(msg) {
+  const ts = new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
+  DB.activityLog.push(`[${ts}] ${msg}`);
+}
+
+// Countdown
+function updateCountdown() {
+  const target = new Date(DB.nextDrawDate + 'T00:00:00');
+  const diff   = target - new Date();
+  const days   = Math.max(0, Math.floor(diff / 86400000));
+  document.getElementById('hero-countdown').textContent = `${days} day${days!==1?'s':''}`;
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+function init() {
+  renderPublicCharities();
+  refreshAdmin();
+  updateCountdown();
+  setInterval(updateCountdown, 60000);
+
+  // Animated charity counter
+  animateCounter('charity-total', 0, 4890, '£', 2000);
+  animateCounter('charity-subs', 0, 127, '', 1800);
+  animateCounter('cta-count',    0, 127, '', 1600);
+
+  // Close modal on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) overlay.classList.add('hidden');
+    });
+  });
+}
+
+function animateCounter(id, from, to, prefix, duration) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const start = performance.now();
+  function update(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const eased    = 1 - Math.pow(1 - progress, 3);
+    const val      = Math.floor(from + (to - from) * eased);
+    el.textContent = prefix + val.toLocaleString();
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+// Scroll fade-in
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.step-card, .prize-tier, .charity-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
+
+init();
+</script>
+</body>
+</html>
